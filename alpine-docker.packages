@@ -1,0 +1,10 @@
+bkeymaps
+alpine-base
+alpine-mirrors
+btrfs-progs-extra
+vim
+docker
+openssl
+openssh
+chrony
+tzdata

@@ -25,7 +25,8 @@ ISO_PKGDIR	:= $(ISO_DIR)/apks/$(ALPINE_ARCH)
 APKS		?= $(shell sed 's/\#.*//; s/\*/\\*/g' $(PROFILE).packages)
 
 APK_KEYS	?= /etc/apk/keys
-APK_OPTS	:= $(addprefix --repository ,$(APK_REPOS)) --keys-dir $(APK_KEYS) --repositories-file /etc/apk/repositories
+#APK_OPTS	:= $(addprefix --repository ,$(APK_REPOS)) --keys-dir $(APK_KEYS) --repositories-file /etc/apk/repositories
+APK_OPTS	:= $(addprefix --repository ,$(APK_REPOS)) --keys-dir $(APK_KEYS) --repositories-file $(shell pwd)/repositories
 
 APK_FETCH_STDOUT := apk fetch $(APK_OPTS) --stdout --quiet
 
@@ -503,7 +504,7 @@ ifeq ($(ALPINE_ARCH),armhf)
 profiles ?= alpine-rpi alpine-uboot
 else
 ifeq ($(ALPINE_ARCH),x86_64)
-profiles ?= alpine alpine-extended alpine-vanilla alpine-virt alpine-xen
+profiles ?= alpine alpine-docker alpine-extended alpine-vanilla alpine-virt alpine-xen
 else
 profiles ?= alpine alpine-extended alpine-vanilla alpine-virt
 endif
@@ -529,7 +530,7 @@ all-release: current $(addsuffix .conf.mk, $(profiles))
 			PROFILE=$$i release || break; \
 	done
 
-edge desktop extended xen vanilla rpi uboot virt: current
+edge desktop docker extended xen vanilla rpi uboot virt: current
 	@fakeroot $(MAKE) ALPINE_RELEASE=$(current) PROFILE=alpine-$@ sha1
 
 .PRECIOUS: $(MODLOOP_KERNELSTAMP) $(MODLOOP_DIRSTAMP) $(INITFS_DIRSTAMP) $(INITFS) $(ISO_KERNEL_STAMP)
